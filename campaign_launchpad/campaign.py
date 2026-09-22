@@ -18,37 +18,66 @@ class Campaign:
 
 class CampaignBuilder:
     def __init__(self):
-      # TODO
-      pass
+      self.name = ""
+      self.channel = ""
+      self.daily_budget = 0.0
+      self.start_date: date
+      self.end_date: Optional[date]
+      self.target_audience = {}
+      self.creatives = []
+      self.tracking = {}
 
     def with_name(self, name: str):
-      # TODO
-      pass
+      self.name = name
+      return self
 
     def with_channel(self, channel: str):
-      # TODO
-      pass
+      self.channel = channel
+      return self
 
     def with_budget(self, daily_budget: float):
-      # TODO
-      pass
+      self.daily_budget = daily_budget
+      return self
 
-    def with_dates(self, start_date, end_date=None):
-      # TODO
-      pass
+    def with_dates(self, start_date, end_date):
+      self.start_date = start_date
+      self.end_date = end_date
+      return self
 
     def with_audience(self, **kwargs):
-      # TODO
-      pass
+      for arg in kwargs:
+        self.target_audience.update(kwargs)
+      return self
 
     def add_creative(self, headline: str, image_url: str):
-      # TODO
-      pass
+      self.creatives = [{headline : image_url}]
+      return self
 
     def with_tracking(self, **kwargs):
-      # TODO
-      pass
+      self.tracking.update(kwargs)
+      return self
 
     def build(self) -> Campaign:
-      # TODO: Validations and return Campaign instance
-      pass
+      campaign = Campaign(
+        self.name, 
+        self.channel, 
+        self.daily_budget, 
+        self.start_date, 
+        self.end_date,
+        self.target_audience, 
+        self.creatives, 
+        self.tracking
+        )
+
+      if not campaign.name:
+        raise ValueError("name")
+      if not campaign.channel:
+        raise ValueError("channel")
+      if not campaign.daily_budget or campaign.daily_budget < 0:
+        raise ValueError("budget")
+      if not campaign.start_date or (campaign.end_date and campaign.end_date < campaign.start_date):
+        raise ValueError("start date")
+      if not campaign.creatives:
+        raise ValueError("creatives")
+
+      return campaign
